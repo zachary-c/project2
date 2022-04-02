@@ -6,8 +6,8 @@ public abstract class Doodad extends GameObject {
 
     private Texture texture;
 
-    public Doodad(int posX, int posY, Texture texture) {
-        super(posX, posY);
+    public Doodad(int posX, int posY, Handler handler, Texture texture) {
+        super(posX, posY, handler);
         this.texture = texture;
     }
 

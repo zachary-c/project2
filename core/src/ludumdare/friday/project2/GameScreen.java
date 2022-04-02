@@ -52,7 +52,9 @@ public class GameScreen implements Screen {
 
         game.batch.begin();
 
-        game.player.render();
+        System.out.println("Before handler render");
+        game.handler.render();
+        System.out.println("After handler render");
 
         game.backEnd.render();
 

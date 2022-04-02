@@ -4,10 +4,12 @@ public abstract class GameObject {
 
     private int posX;
     private int posY;
+    private Handler handler;
 
-    public GameObject(int posX, int posY){
+    public GameObject(int posX, int posY, Handler handler){
         this.posX = posX;
         this.posY = posY;
+        this.handler = handler;
     }
 
     public int getPosX() {
@@ -24,5 +26,9 @@ public abstract class GameObject {
 
     public void setPosY(int posY) {
         this.posY = posY;
+    }
+
+    public void render(){
+
     }
 }

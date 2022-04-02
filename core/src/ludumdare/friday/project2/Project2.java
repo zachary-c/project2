@@ -23,6 +23,7 @@ public class Project2 extends Game {
 
 	public MainMenuScreen menuScreen;
 	public GameScreen gameScreen;
+	public Handler handler;
 
 	private static ActiveScreen actScr;
 
@@ -30,8 +31,6 @@ public class Project2 extends Game {
 	public static final int WINDOW_HEIGHT = 1080;
 	public static final float ASPECT_RATIO = (float) WINDOW_WIDTH / (float) WINDOW_HEIGHT;
 	public static final boolean Y_DOWN = false;
-
-	public Player player;
 
 
 	//LibGDX uses a native library, which needs to be loaded into memory before we can start working with it.
@@ -45,14 +44,12 @@ public class Project2 extends Game {
 
 		batch = new SpriteBatch();
 
-		font = new BitmapFont(new FileHandle(new File("./fonts/comic_sans.fnt")), Y_DOWN);
+		font = new BitmapFont();
 		font.getData().setScale(2.0f);
 
 		backEnd = new BackEnd(this);
 		this.setScreen(menuScreen);
 		setActScr(ActiveScreen.MENU);
-
-		player = new Player(50, 50, 100, 6);
 
 	}
 

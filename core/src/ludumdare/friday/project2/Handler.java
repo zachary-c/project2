@@ -8,8 +8,14 @@ public class Handler {
     private World curWorld;
 
     public Handler(){
-        objectList = new ArrayList<GameObject>();
+        objectList = new ArrayList<>();
         curWorld = new World();
+        objectList.add(new Player(50, 50, this, 100, 6));
+
+    }
+
+    public void render(){
+        objectList.get(0).render();
     }
 
 }

@@ -2,7 +2,6 @@ package ludumdare.friday.project2;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 import java.util.ArrayList;
@@ -20,9 +19,9 @@ public class Player extends Animated {
 
     private int velX, velY;
 
-    public Player(int posX, int posY, int health, int speed)
+    public Player(int posX, int posY, Handler handler, int health, int speed)
     {
-        super(posX, posY);
+        super(posX, posY, handler);
         this.health = health;
         this.speed = speed;
         inventory = new ArrayList<GameObject>();
