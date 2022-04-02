@@ -2,8 +2,11 @@ package ludumdare.friday.project2;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 
 // HashMap yay
 import java.util.HashMap;
@@ -16,12 +19,14 @@ public class Animator {
     private HashMap<String,Animation<TextureRegion>> animations;
     // keeps track of the current animation that should be playing; the string is a key in the above hashmap
     private String currentAnim;
+    private float width, height;
     private float stateTime;
 
     private GameObject owner;
 
-    private float scale = 1f;
+    //private float scale = 1f;
 
+    private ShapeRenderer shapeRenderer;
 
     public Animator(GameObject owner) {
         // initalize so the player's x and y match the animation's
@@ -33,6 +38,12 @@ public class Animator {
 
         // initialize for below
         stateTime = 0.0f;
+
+        if (Project2.HITBOXES) {
+            shapeRenderer = new ShapeRenderer();
+            shapeRenderer.setAutoShapeType(true);
+        }
+
     }
 
     public void addAnimationByRegion(TextureAtlas atlas, String name) {
@@ -43,6 +54,8 @@ public class Animator {
         animations.put(name, temp);
         if (currentAnim == null) {
             currentAnim = animations.keySet().iterator().next();
+            width = animations.get(currentAnim).getKeyFrame(0).getRegionWidth() * owner.camera_ratio * Project2.SPRITE_SCALE;
+            height = animations.get(currentAnim).getKeyFrame(0).getRegionHeight() * owner.camera_ratio * Project2.SPRITE_SCALE;
         }
     }
 
@@ -51,16 +64,24 @@ public class Animator {
 
         // Get current frame of animation for the current stateTime
         currentFrame = animations.get(currentAnim).getKeyFrame(stateTime, true);
-        batch.draw(currentFrame, owner.getPosX(), owner.getPosY(), currentFrame.getRegionWidth()*scale, currentFrame.getRegionHeight()*scale); // Draw current frame at the owner's x and y coords
+
+        batch.draw(currentFrame, owner.getPosX(), owner.getPosY(), width, height); // Draw current frame at the owner's x and y coords
+        if (Project2.HITBOXES) {
+            shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+            shapeRenderer.rect(owner.getPosX(), owner.getPosY(), width, height);
+            shapeRenderer.end();
+        }
     }
 
-    public void getRectangle() {
 
+    public Rectangle getRectangle() {
+        return new Rectangle(owner.getPosX(), owner.getPosY(), width, height);
     }
 
-    public void setScaling(float scale) {
-        this.scale = scale;
-    }
+    //public void setScaling(float scale) {
+    //    this.scale = scale;
+    //}
 
     public void setCurrentAnim(String currentAnim) {
         // for changing what animation is playing

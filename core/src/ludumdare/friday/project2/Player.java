@@ -5,13 +5,13 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Rectangle;
 
 import java.util.ArrayList;
 
 public class Player extends Moving {
 
     private int health;
-    private final int speed;
     private ArrayList<GameObject> inventory;
 
     // these are the animations that need loaded into the animator
@@ -23,7 +23,6 @@ public class Player extends Moving {
     {
         super(posX, posY, handler, speed);
         this.health = health;
-        this.speed = speed;
         inventory = new ArrayList<>();
 
         atlas = new TextureAtlas(Gdx.files.internal("./walkin/walkin.atlas"));
@@ -32,7 +31,6 @@ public class Player extends Moving {
         for (String s : walkAnimations) {
             animator.addAnimationByRegion(atlas, s);
         }
-        animator.setScaling(scale);
     }
 
     @Override
@@ -65,4 +63,6 @@ public class Player extends Moving {
             setVelY(0);
         }
     }
+
+
 }

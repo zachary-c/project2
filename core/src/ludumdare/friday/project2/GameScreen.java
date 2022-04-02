@@ -7,32 +7,59 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 public class GameScreen implements Screen {
     final Project2 game;
 
-    public static final int WORLD_WIDTH = 700;
-    public static final int WORLD_HEIGHT = 460;
+    public static final int WORLD_WIDTH = 1920;
+    public static final int WORLD_HEIGHT = 1024;
     OrthographicCamera camera;
+    float camera_ratio;
+
+    TiledMap tiledMap;
+    TiledMapTileLayer layer;
+    float unitScale = 1 / 2f;
+    OrthogonalTiledMapRenderer renderer;
 
     private Sprite mapSprite;
+    private Sprite measuring;
 
     public GameScreen(Project2 game) {
         this.game = game;
 
+        tiledMap = new TmxMapLoader().load("first.tmx");
+        layer = (TiledMapTileLayer) tiledMap.getLayers().get(0);
+        System.out.println(layer.getWidth()  + ", " + layer.getHeight());
+        renderer = new OrthogonalTiledMapRenderer(tiledMap, unitScale);
+
+
+
+
+        // background s p a c e
         mapSprite = new Sprite(new Texture(Gdx.files.internal("./galaxy.png")));
         mapSprite.setPosition(0,0);
         mapSprite.setSize(WORLD_WIDTH, WORLD_HEIGHT);
 
+        // measuring stick for pixels
+        measuring = new Sprite(new Texture(Gdx.files.internal("./measure.png")));
+        measuring.setPosition(0,0);
+        measuring.setSize(128,128);
+
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
 
-        camera = new OrthographicCamera(300, 300 * (h /w));
+        camera = new OrthographicCamera(312, 312 * (h /w));
+        camera_ratio = camera.viewportWidth / WORLD_WIDTH;
         // setting the perspective of the camera
         camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
         camera.update();
+        renderer.setView(camera);
 
     }
 
@@ -44,8 +71,10 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
 
-        handleInput();
+        handleMovement();
         camera.update();
+
+        renderer.render();
 
         game.batch.setProjectionMatrix(camera.combined);
 
@@ -57,7 +86,8 @@ public class GameScreen implements Screen {
             game.setScreen(game.menuScreen);
             game.setActScr(ActiveScreen.MENU);
         }
-        mapSprite.draw(game.batch);
+        //mapSprite.draw(game.batch);
+        measuring.draw(game.batch);
         game.handler.render(game.batch);
 
         game.batch.end();
@@ -65,7 +95,8 @@ public class GameScreen implements Screen {
         game.backEnd.render();
     }
 
-    private void handleInput() {
+    private void handleMovement() {
+        /*
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             camera.translate(-3, 0, 0);
         }
@@ -78,6 +109,18 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             camera.translate(0, 3, 0);
         }
+        */
+
+        float playerXCenter = game.handler.getPlayer().getPosX() + game.handler.getPlayer().getRectangle().width/2f;
+        float playerYCenter = game.handler.getPlayer().getPosY() + game.handler.getPlayer().getRectangle().height/2f;
+
+        if (playerXCenter > camera.viewportWidth / 2f) {
+            camera.position.x = playerXCenter;
+        }
+        if (playerYCenter > camera.viewportHeight / 2f) {
+            camera.position.y = playerYCenter;
+        }
+
         camera.position.x = MathUtils.clamp(camera.position.x, camera.viewportWidth / 2f, WORLD_WIDTH - camera.viewportWidth / 2f);
         camera.position.y = MathUtils.clamp(camera.position.y, camera.viewportHeight / 2f, WORLD_HEIGHT - camera.viewportHeight / 2f);
     }

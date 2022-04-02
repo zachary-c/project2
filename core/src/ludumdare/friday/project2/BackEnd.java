@@ -20,8 +20,10 @@ public class BackEnd {
     }
 
     public void render() {
-        hud.begin();
-        backFont.draw(hud, "Current Screen: " + game.getActScr() + "\n velX | velY: " + game.handler.getPlayer().getVelX() + " | " + game.handler.getPlayer().getVelY(), 0, Gdx.graphics.getHeight()-20, Gdx.graphics.getWidth()-20, Align.right, true);
-        hud.end();
+        if (Project2.DEV) {
+            hud.begin();
+            backFont.draw(hud, "Current Screen: " + game.getActScr() + "\n velX | velY: " + game.handler.getPlayer().getVelX() + " | " + game.handler.getPlayer().getVelY() + "\n pRectW: " + game.handler.getPlayer().getRectangle().width + "\n pX, pY: " + game.handler.getPlayer().getPosX() + ", " + game.handler.getPlayer().getPosY(), 0, Gdx.graphics.getHeight()-20, Gdx.graphics.getWidth()-20, Align.right, true);
+            hud.end();
+        }
     }
 }
