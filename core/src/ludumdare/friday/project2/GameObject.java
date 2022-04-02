@@ -1,5 +1,7 @@
 package ludumdare.friday.project2;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
 public abstract class GameObject {
 
     private int posX;
@@ -28,7 +30,7 @@ public abstract class GameObject {
         this.posY = posY;
     }
 
-    public void render(){
-
+    public void render(SpriteBatch batch){
+        // does stuff in subclasses
     }
 }

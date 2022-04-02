@@ -2,11 +2,13 @@ package ludumdare.friday.project2;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 import java.util.ArrayList;
 
-public class Player extends Animated {
+public class Player extends Moving {
 
     private int health;
     private final int speed;
@@ -17,14 +19,12 @@ public class Player extends Animated {
 
     private TextureAtlas atlas;
 
-    private int velX, velY;
-
     public Player(int posX, int posY, Handler handler, int health, int speed)
     {
-        super(posX, posY, handler);
+        super(posX, posY, handler, speed);
         this.health = health;
         this.speed = speed;
-        inventory = new ArrayList<GameObject>();
+        inventory = new ArrayList<>();
 
         atlas = new TextureAtlas(Gdx.files.internal("./walkin/walkin.atlas"));
 
@@ -32,14 +32,13 @@ public class Player extends Animated {
         for (String s : walkAnimations) {
             animator.addAnimationByRegion(atlas, s);
         }
+        animator.setScaling(scale);
     }
 
-    public void render() {
+    @Override
+    public void render(SpriteBatch batch) {
         // encapsulation babyyyy
-        setPosX(getPosX()+velX);
-        setPosY(getPosY()+velY);
-        animator.render();
-
+        super.render(batch);
         keyHandler();
     }
 
@@ -47,25 +46,23 @@ public class Player extends Animated {
 
         // keep left right and up down separate
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            velX = -speed;
+            setVelX(-speed);
             animator.setCurrentAnim("anna_left");
         } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            velX = speed;
+            setVelX(speed);
             animator.setCurrentAnim("anna_right");
         } else {
-            velX = 0;
+            setVelX(0);
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            velY = -speed;
+            setVelY(-speed);
             animator.setCurrentAnim("anna_front");
         } else if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            velY = speed;
+            setVelY(speed);
             animator.setCurrentAnim("anna_back");
         } else {
-            velY = 0;
+            setVelY(0);
         }
     }
-
-
 }

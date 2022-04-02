@@ -3,37 +3,36 @@ package ludumdare.friday.project2;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 public class GameScreen implements Screen {
     final Project2 game;
 
-    public static final ActiveScreen AC = ActiveScreen.MENU;
-
-    TextureAtlas atlas;
-    TextureAtlas tileAtlas;
-    Sprite sprite;
-
-    float stateTime;
-
-    public Animation<TextureRegion> runningAnimation;
-
+    public static final int WORLD_WIDTH = 700;
+    public static final int WORLD_HEIGHT = 460;
     OrthographicCamera camera;
+
+    private Sprite mapSprite;
 
     public GameScreen(Project2 game) {
         this.game = game;
 
-        camera = new OrthographicCamera();
-        camera.setToOrtho(Project2.Y_DOWN, Project2.WINDOW_WIDTH, Project2.WINDOW_HEIGHT);
+        mapSprite = new Sprite(new Texture(Gdx.files.internal("./galaxy.png")));
+        mapSprite.setPosition(0,0);
+        mapSprite.setSize(WORLD_WIDTH, WORLD_HEIGHT);
 
-        //tileAtlas = new TextureAtlas(Gdx.files.internal("../texture_packer/sprites2.atlas"));
+        float w = Gdx.graphics.getWidth();
+        float h = Gdx.graphics.getHeight();
 
-       // atlas = new TextureAtlas(Gdx.files.internal("../texture_packer/walkin/walkin.atlas"));
-
-        //runningAnimation = new Animation<TextureRegion>(0.033f, atlas.findRegions("anna_front"), Animation.PlayMode.LOOP);
+        camera = new OrthographicCamera(300, 300 * (h /w));
+        // setting the perspective of the camera
+        camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
+        camera.update();
 
     }
 
@@ -44,26 +43,43 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        ScreenUtils.clear(0, 0.2f, 0, 1);
 
+        handleInput();
         camera.update();
 
         game.batch.setProjectionMatrix(camera.combined);
 
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         game.batch.begin();
-
-        //System.out.println("Before handler render");
-        game.handler.render();
-        //System.out.println("After handler render");
-
-        game.backEnd.render();
 
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             game.setScreen(game.menuScreen);
             game.setActScr(ActiveScreen.MENU);
         }
+        mapSprite.draw(game.batch);
+        game.handler.render(game.batch);
 
         game.batch.end();
+
+        game.backEnd.render();
+    }
+
+    private void handleInput() {
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            camera.translate(-3, 0, 0);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            camera.translate(3, 0, 0);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            camera.translate(0, -3, 0);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            camera.translate(0, 3, 0);
+        }
+        camera.position.x = MathUtils.clamp(camera.position.x, camera.viewportWidth / 2f, WORLD_WIDTH - camera.viewportWidth / 2f);
+        camera.position.y = MathUtils.clamp(camera.position.y, camera.viewportHeight / 2f, WORLD_HEIGHT - camera.viewportHeight / 2f);
     }
 
     @Override
@@ -91,5 +107,7 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         // Called when this screen should release all resources.
+
+        mapSprite.getTexture().dispose();
     }
 }

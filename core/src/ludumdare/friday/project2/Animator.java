@@ -18,7 +18,9 @@ public class Animator {
     private String currentAnim = "anna_right";;
     private float stateTime;
 
-    GameObject owner;
+    private GameObject owner;
+
+    private float scale = 1f;
 
 
     public Animator(GameObject owner) {
@@ -37,19 +39,22 @@ public class Animator {
         // This line takes the given atlas (large sprite file) and loads the animation with the give name ("anna_left_0", "anna_left_1), etc
         Animation<TextureRegion> temp = new Animation<TextureRegion>(0.09f, atlas.findRegions(name), Animation.PlayMode.LOOP);
         // then we put it into the animation hashmap paired with its name
+
         animations.put(name, temp);
     }
 
-    public void render() {
+    public void render(SpriteBatch batch) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); // Clear screen
         stateTime += Gdx.graphics.getDeltaTime(); // Accumulate elapsed animation time
 
         // Get current frame of animation for the current stateTime
         currentFrame = animations.get(currentAnim).getKeyFrame(stateTime, true);
-        spriteBatch.begin();
-        spriteBatch.draw(currentFrame, owner.getPosX(), owner.getPosY()); // Draw current frame at the owner's x and y coords
-        spriteBatch.end();
+        batch.draw(currentFrame, owner.getPosX(), owner.getPosY(), currentFrame.getRegionWidth()*scale, currentFrame.getRegionHeight()*scale); // Draw current frame at the owner's x and y coords
 
+    }
+
+    public void setScaling(float scale) {
+        this.scale = scale;
     }
 
     public void setCurrentAnim(String currentAnim) {

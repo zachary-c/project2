@@ -17,35 +17,35 @@ import java.util.Arrays;
 public class Project2 extends Game {
 	SpriteBatch batch;
 	BitmapFont font;
-	FileHandle fontFile;
 	BackEnd backEnd;
 
 
+	public Handler handler;
+
 	public MainMenuScreen menuScreen;
 	public GameScreen gameScreen;
-	public Handler handler;
 
 	private static ActiveScreen actScr;
 
 	public static final int WINDOW_WIDTH = 1920;
 	public static final int WINDOW_HEIGHT = 1080;
+	public static final float SPRITE_SCALE = .25f;
+	public static final float SPRITE_SPEED_SCALE = 1f;
 	public static final float ASPECT_RATIO = (float) WINDOW_WIDTH / (float) WINDOW_HEIGHT;
 	public static final boolean Y_DOWN = false;
 
-
-	//LibGDX uses a native library, which needs to be loaded into memory before we can start working with it.
+	// LibGDX uses a native library, which needs to be loaded into memory before we can start working with it.
 	// So the only safe place we have to instantiate LibGDX objects is in the create method.
 
 	@Override
 	public void create () {
-
 		menuScreen = new MainMenuScreen(this);
 		gameScreen = new GameScreen(this);
-		handler = new Handler(this);
 
 		batch = new SpriteBatch();
+		handler = new Handler(this);
 
-		font = new BitmapFont();
+		font = new BitmapFont(new FileHandle(new File("./fonts/comic_sans.fnt")), Y_DOWN);
 		font.getData().setScale(2.0f);
 
 		backEnd = new BackEnd(this);

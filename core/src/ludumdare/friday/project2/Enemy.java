@@ -2,20 +2,18 @@ package ludumdare.friday.project2;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
-public class Enemy extends Animated{
+public class Enemy extends Moving{
 
     // nate's department
     String[] walkAnimations = {"anna_front", "anna_right", "anna_left", "anna_back"};
 
     private TextureAtlas atlas;
 
-    private int velX, velY;
-
-
-    public Enemy(int posX, int posY, Handler handler){
-        super(posX, posY, handler);
+    public Enemy(int posX, int posY, Handler handler, int speed){
+        super(posX, posY, handler, speed);
 
         atlas = new TextureAtlas(Gdx.files.internal("./walkin/walkin.atlas"));
 
@@ -25,33 +23,29 @@ public class Enemy extends Animated{
         }
     }
 
-    public void render() {
+    public void render(SpriteBatch batch) {
         // encapsulation babyyyy
-        setPosX(getPosX()+velX);
-        setPosY(getPosY()+velY);
-        animator.render();
+        super.render(batch);
         search();
-
-
     }
 
     public void search(){
-        int playerPosX = handler.getObjectList().get(0).getPosX();
-        int playerPosY = handler.getObjectList().get(0).getPosY();
+        int playerPosX = handler.getPlayer().getPosX();
+        int playerPosY = handler.getPlayer().getPosY();
         if (playerPosX < getPosX()){
-            velX = -4;
+            setVelX(-speed);
             animator.setCurrentAnim("anna_right");
         }
         if (playerPosX > getPosX()){
-            velX = 4;
+            setVelX(speed);
             animator.setCurrentAnim("anna_left");
         }
         if (playerPosY < getPosY()){
-            velY = -4;
+            setVelY(-speed);
             animator.setCurrentAnim("anna_back");
         }
         if (playerPosX < getPosX()){
-            velY = 4;
+            setVelY(speed);
             animator.setCurrentAnim("anna_front");
         }
 
