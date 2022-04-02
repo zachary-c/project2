@@ -32,21 +32,36 @@ public class Enemy extends Moving{
     public void search(){
         int playerPosX = handler.getPlayer().getPosX();
         int playerPosY = handler.getPlayer().getPosY();
+
         if (playerPosX < getPosX()){
             setVelX(-speed);
-            animator.setCurrentAnim("pendalton_right");
+            animator.setCurrentAnim("pendalton_left");
         }
         if (playerPosX > getPosX()){
             setVelX(speed);
-            animator.setCurrentAnim("pendalton_left");
+            animator.setCurrentAnim("pendalton_right");
         }
         if (playerPosY < getPosY()){
             setVelY(-speed);
-            animator.setCurrentAnim("pendalton_back");
+            animator.setCurrentAnim("pendalton_front");
         }
         if (playerPosY > getPosY()){
             setVelY(speed);
-            animator.setCurrentAnim("pendalton_front");
+            animator.setCurrentAnim("pendalton_back");
+        }
+
+        if (Math.abs(playerPosX - getPosX()) < 4){
+            setVelX(0);
+        }
+        if (Math.abs(playerPosY - getPosY()) < 4){
+            setVelY(0);
+        }
+        if (Math.abs(playerPosY - getPosY()) < Math.abs(playerPosX - getPosX())) {
+            if (playerPosX < getPosX()) {
+                animator.setCurrentAnim("pendalton_left");
+            } else {
+                animator.setCurrentAnim("pendalton_right");
+            }
         }
 
 
