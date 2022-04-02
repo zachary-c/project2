@@ -16,6 +16,6 @@ public class BackEnd {
     }
 
     public void render() {
-        backFont.draw(game.batch, "Current Screen: " + game.getActScr(), Project2.WINDOW_WIDTH-750, Project2.WINDOW_HEIGHT-10, 1000.0f, Align.center, true);
+        backFont.draw(game.batch, "Current Screen: " + game.getActScr(), Project2.WINDOW_WIDTH-1000, Project2.WINDOW_HEIGHT-50, 950, Align.right, true);
     }
 }

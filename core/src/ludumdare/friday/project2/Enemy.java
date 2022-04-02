@@ -4,8 +4,10 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class Enemy extends GameObject{
 
-    public Enemy(int posX, int posY, Texture objectTexture){
-        super(posX, posY, objectTexture);
+    // nate's department
+
+    public Enemy(int posX, int posY){
+        super(posX, posY);
     }
 
 

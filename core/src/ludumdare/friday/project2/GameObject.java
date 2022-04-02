@@ -1,18 +1,13 @@
 package ludumdare.friday.project2;
 
-import com.badlogic.gdx.graphics.Texture;
-
-public class GameObject {
+public abstract class GameObject {
 
     private int posX;
     private int posY;
 
-    private Texture ObjectTexture;
-
-    public GameObject(int posX, int posY, Texture ObjectTexture){
+    public GameObject(int posX, int posY){
         this.posX = posX;
         this.posY = posY;
-        this.ObjectTexture = ObjectTexture;
     }
 
     public int getPosX() {
@@ -23,10 +18,6 @@ public class GameObject {
         return posY;
     }
 
-    public Texture getObjectTexture() {
-        return ObjectTexture;
-    }
-
     public void setPosX(int posX) {
         this.posX = posX;
     }
@@ -34,9 +25,4 @@ public class GameObject {
     public void setPosY(int posY) {
         this.posY = posY;
     }
-
-    public void setObjectTexture(Texture objectTexture) {
-        ObjectTexture = objectTexture;
-    }
-
 }
