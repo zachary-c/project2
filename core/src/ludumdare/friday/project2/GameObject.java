@@ -4,7 +4,7 @@ public abstract class GameObject {
 
     private int posX;
     private int posY;
-    private Handler handler;
+    protected Handler handler;
 
     public GameObject(int posX, int posY, Handler handler){
         this.posX = posX;

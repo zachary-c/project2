@@ -30,6 +30,30 @@ public class Enemy extends Animated{
         setPosX(getPosX()+velX);
         setPosY(getPosY()+velY);
         animator.render();
+        search();
+
+
+    }
+
+    public void search(){
+        int playerPosX = handler.getObjectList().get(0).getPosX();
+        int playerPosY = handler.getObjectList().get(0).getPosY();
+        if (playerPosX < getPosX()){
+            velX = -4;
+            animator.setCurrentAnim("anna_right");
+        }
+        if (playerPosX > getPosX()){
+            velX = 4;
+            animator.setCurrentAnim("anna_left");
+        }
+        if (playerPosY < getPosY()){
+            velY = -4;
+            animator.setCurrentAnim("anna_back");
+        }
+        if (playerPosX < getPosX()){
+            velY = 4;
+            animator.setCurrentAnim("anna_front");
+        }
 
 
     }

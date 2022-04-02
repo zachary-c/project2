@@ -41,6 +41,7 @@ public class Project2 extends Game {
 
 		menuScreen = new MainMenuScreen(this);
 		gameScreen = new GameScreen(this);
+		handler = new Handler(this);
 
 		batch = new SpriteBatch();
 
