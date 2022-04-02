@@ -15,7 +15,7 @@ public class Animator {
     // maps names of animations ("anna_left", "anna_right") to the appropriate Animation Object (a sequence of TextureRegions, really)
     private HashMap<String,Animation<TextureRegion>> animations;
     // keeps track of the current animation that should be playing; the string is a key in the above hashmap
-    private String currentAnim = "anna_right";;
+    private String currentAnim;
     private float stateTime;
 
     private GameObject owner;
@@ -41,15 +41,20 @@ public class Animator {
         // then we put it into the animation hashmap paired with its name
 
         animations.put(name, temp);
+        if (currentAnim == null) {
+            currentAnim = animations.keySet().iterator().next();
+        }
     }
 
     public void render(SpriteBatch batch) {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); // Clear screen
         stateTime += Gdx.graphics.getDeltaTime(); // Accumulate elapsed animation time
 
         // Get current frame of animation for the current stateTime
         currentFrame = animations.get(currentAnim).getKeyFrame(stateTime, true);
         batch.draw(currentFrame, owner.getPosX(), owner.getPosY(), currentFrame.getRegionWidth()*scale, currentFrame.getRegionHeight()*scale); // Draw current frame at the owner's x and y coords
+    }
+
+    public void getRectangle() {
 
     }
 

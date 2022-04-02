@@ -8,14 +8,14 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 public class Enemy extends Moving{
 
     // nate's department
-    String[] walkAnimations = {"anna_front", "anna_right", "anna_left", "anna_back"};
+    String[] walkAnimations = {"pendalton_front", "pendalton_right", "pendalton_left", "pendalton_back"};
 
     private TextureAtlas atlas;
 
     public Enemy(int posX, int posY, Handler handler, int speed){
         super(posX, posY, handler, speed);
 
-        atlas = new TextureAtlas(Gdx.files.internal("./walkin/walkin.atlas"));
+        atlas = new TextureAtlas(Gdx.files.internal("./penta_walkin/penta_walk_cycle.atlas"));
 
         // load each of the animations provided by the walkAnimations array into the animator
         for (String s : walkAnimations) {
@@ -34,19 +34,19 @@ public class Enemy extends Moving{
         int playerPosY = handler.getPlayer().getPosY();
         if (playerPosX < getPosX()){
             setVelX(-speed);
-            animator.setCurrentAnim("anna_right");
+            animator.setCurrentAnim("pendalton_right");
         }
         if (playerPosX > getPosX()){
             setVelX(speed);
-            animator.setCurrentAnim("anna_left");
+            animator.setCurrentAnim("pendalton_left");
         }
         if (playerPosY < getPosY()){
             setVelY(-speed);
-            animator.setCurrentAnim("anna_back");
+            animator.setCurrentAnim("pendalton_back");
         }
-        if (playerPosX < getPosX()){
+        if (playerPosY > getPosY()){
             setVelY(speed);
-            animator.setCurrentAnim("anna_front");
+            animator.setCurrentAnim("pendalton_front");
         }
 
 
