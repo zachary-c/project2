@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.8" tiledversion="1.8.4" name="Level0" tilewidth="128" tileheight="128" tilecount="30" columns="0">
+<tileset version="1.8" tiledversion="1.8.4" name="Level0" tilewidth="128" tileheight="128" tilecount="31" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <image width="128" height="128" source="../tiles/Walls/tr_o_corner.png"/>
@@ -95,5 +95,8 @@
  </tile>
  <tile id="38">
   <image width="128" height="128" source="../tiles/triangle_start.png.png"/>
+ </tile>
+ <tile id="39">
+  <image width="128" height="127" source="../tiles/doodads/door.png"/>
  </tile>
 </tileset>
