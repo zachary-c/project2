@@ -41,7 +41,6 @@ public class Player extends Moving {
     }
 
     private void keyHandler() {
-
         // keep left right and up down separate
         if (Gdx.input.isKeyPressed(Input.Keys.A)) {
             setVelX(-speed);

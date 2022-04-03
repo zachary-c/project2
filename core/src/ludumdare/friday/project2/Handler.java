@@ -15,7 +15,7 @@ public class Handler {
         this.game = game;
         objectList = new ArrayList<>();
         curWorld = new World();
-        objectList.add(new Player(50, 50, this, 100, 3));
+        objectList.add(new Player(0, 0, this, 100, 3));
         objectList.add(new Enemy(50, 50, this, 2));
 
     }

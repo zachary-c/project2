@@ -1,6 +1,7 @@
 package ludumdare.friday.project2;
 
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -22,9 +23,8 @@ public class Project2 extends Game {
 
 	public static final int WINDOW_WIDTH = 1920;
 	public static final int WINDOW_HEIGHT = 1080;
-	public static final float SPRITE_SCALE = 2f;
+	public static final float SPRITE_SCALE = .45f;
 	public static final float SPRITE_SPEED_SCALE = 1f;
-	public static final float ASPECT_RATIO = (float) WINDOW_WIDTH / (float) WINDOW_HEIGHT;
 	public static final boolean Y_DOWN = false;
 	public static final boolean HITBOXES = false;
 	public static final boolean DEV = false;
@@ -35,9 +35,10 @@ public class Project2 extends Game {
 	@Override
 	public void create () {
 		menuScreen = new MainMenuScreen(this);
-		gameScreen = new GameScreen(this);
 
 		batch = new SpriteBatch();
+
+		gameScreen = new GameScreen(this);
 		handler = new Handler(this);
 
 		font = new BitmapFont(new FileHandle(new File("./fonts/project2.fnt")), Y_DOWN);

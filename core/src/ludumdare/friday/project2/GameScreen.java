@@ -12,20 +12,27 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class GameScreen implements Screen {
     final Project2 game;
 
     public static final int WORLD_WIDTH = 1920;
-    public static final int WORLD_HEIGHT = 1024;
-    OrthographicCamera camera;
+    public static final int WORLD_HEIGHT = 1080;
+    private OrthographicCamera camera;
     float camera_ratio;
 
-    TiledMap tiledMap;
-    TiledMapTileLayer layer;
-    float unitScale = 1 / 2f;
-    OrthogonalTiledMapRenderer renderer;
+
+    private final Viewport viewport;
+    private final OrthogonalTiledMapRenderer renderer;
+    int tileSize;
+
+    Background stage;
+    TextureRegion oneTile;
 
     private Sprite mapSprite;
     private Sprite measuring;
@@ -33,13 +40,8 @@ public class GameScreen implements Screen {
     public GameScreen(Project2 game) {
         this.game = game;
 
-        tiledMap = new TmxMapLoader().load("first.tmx");
-        layer = (TiledMapTileLayer) tiledMap.getLayers().get(0);
-        System.out.println(layer.getWidth()  + ", " + layer.getHeight());
-        renderer = new OrthogonalTiledMapRenderer(tiledMap, unitScale);
 
-
-
+        //oneTile = new TextureRegion(layer.getCell(0,0).getTile().getTextureRegion());
 
         // background s p a c e
         mapSprite = new Sprite(new Texture(Gdx.files.internal("./galaxy.png")));
@@ -51,15 +53,23 @@ public class GameScreen implements Screen {
         measuring.setPosition(0,0);
         measuring.setSize(128,128);
 
-        float w = Gdx.graphics.getWidth();
-        float h = Gdx.graphics.getHeight();
+        // gets the aspect ratio of the device, which in our case is always 1920x1080 thanks to DesktopLauncher
+        float screenRatio = (float) Gdx.graphics.getWidth() / (float) Gdx.graphics.getHeight();
+        // ViewPort Percentage
+        float viewportPercent = .30f;
+        float vPortion = viewportPercent * WORLD_WIDTH;
 
-        camera = new OrthographicCamera(312, 312 * (h /w));
-        camera_ratio = camera.viewportWidth / WORLD_WIDTH;
-        // setting the perspective of the camera
-        camera.position.set(camera.viewportWidth / 2f, camera.viewportHeight / 2f, 0);
-        camera.update();
-        renderer.setView(camera);
+        // load the tilemap
+        TiledMap map = new TmxMapLoader().load("./tileLevel/Level0.tmx");
+        // get the tilesize of the first layer
+        tileSize = ((TiledMapTileLayer) map.getLayers().get(0)).getTileWidth();
+        // create a viewport to see through, set it up to be a portion of the tilemap
+        viewport = new FitViewport(vPortion, vPortion * (1/screenRatio));
+        // create the renderer, set the unitScale (ratio of pixels to tiles
+        renderer = new OrthogonalTiledMapRenderer(map, 1f);
+
+        // does nothing atm, is multiplied to all the sprites
+        camera_ratio = 1;
 
     }
 
@@ -70,46 +80,31 @@ public class GameScreen implements Screen {
 
     @Override
     public void render(float delta) {
-
-        handleMovement();
-        camera.update();
-
-        renderer.render();
-
-        game.batch.setProjectionMatrix(camera.combined);
-
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        game.batch.begin();
+        game.batch.setProjectionMatrix(viewport.getCamera().combined);
+        handleMovement();
+        viewport.getCamera().update();
+
+        renderer.setView((OrthographicCamera) viewport.getCamera());
+
+        renderer.render();
 
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             game.setScreen(game.menuScreen);
             game.setActScr(ActiveScreen.MENU);
         }
-        //mapSprite.draw(game.batch);
-        measuring.draw(game.batch);
-        game.handler.render(game.batch);
 
+        game.batch.begin();
+        game.handler.render(game.batch);
+        measuring.draw(game.batch);
         game.batch.end();
 
         game.backEnd.render();
     }
 
     private void handleMovement() {
-        /*
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            camera.translate(-3, 0, 0);
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            camera.translate(3, 0, 0);
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            camera.translate(0, -3, 0);
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            camera.translate(0, 3, 0);
-        }
-        */
+        OrthographicCamera camera = (OrthographicCamera) viewport.getCamera();
 
         float playerXCenter = game.handler.getPlayer().getPosX() + game.handler.getPlayer().getRectangle().width/2f;
         float playerYCenter = game.handler.getPlayer().getPosY() + game.handler.getPlayer().getRectangle().height/2f;
@@ -127,6 +122,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
+        viewport.update(width, height, true);
         // Called when the Application is resized. This can happen at any point
         // during a non-paused state but will never happen before a call to create().
     }
@@ -152,5 +148,6 @@ public class GameScreen implements Screen {
         // Called when this screen should release all resources.
 
         mapSprite.getTexture().dispose();
+        stage.dispose();
     }
 }
