@@ -2,6 +2,7 @@ package ludumdare.friday.project2;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -13,6 +14,8 @@ public class Player extends Moving {
 
     private int health;
     private ArrayList<GameObject> inventory;
+
+    private Sound damageSound;
 
     // these are the animations that need loaded into the animator
     String[] walkAnimations = {"anna_front", "anna_right", "anna_left", "anna_back", "anna_ka"};
@@ -33,6 +36,9 @@ public class Player extends Moving {
         for (String s : walkAnimations) {
             animator.addAnimationByRegion(atlas, s);
         }
+        // damageSound
+        damageSound = Gdx.audio.newSound(Gdx.files.internal("./audio/anna_hurt.mp3"));
+
     }
 
     @Override
@@ -85,18 +91,20 @@ public class Player extends Moving {
         } else {
             setVelY(0);
         }
-
     }
 
     public void takeDamage(int dmg) {
         if (!(iframes > 0)) {
             health-=dmg;
             iframes+=.75f;
+            damageSound.play(.75f * handler.game.getVolume());
         }
-
     }
 
     public int getHealth() { return health; }
 
-
+    @Override
+    public void dispose() {
+        damageSound.dispose();
+    }
 }

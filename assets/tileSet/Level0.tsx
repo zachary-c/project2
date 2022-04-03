@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.8" tiledversion="1.8.4" name="Level0" tilewidth="128" tileheight="128" tilecount="23" columns="0">
+<tileset version="1.8" tiledversion="1.8.4" name="Level0" tilewidth="128" tileheight="128" tilecount="30" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <image width="128" height="128" source="../tiles/Walls/tr_o_corner.png"/>
@@ -55,9 +55,6 @@
  <tile id="17">
   <image width="128" height="128" source="../tiles/Walls/tl_corner.png"/>
  </tile>
- <tile id="18">
-  <image width="128" height="128" source="../tiles/stone_tile.png"/>
- </tile>
  <tile id="19">
   <image width="128" height="128" source="../tiles/Walls/br_corner.png"/>
  </tile>
@@ -69,5 +66,34 @@
  </tile>
  <tile id="22">
   <image width="128" height="128" source="../tiles/stone_tile.png"/>
+ </tile>
+ <tile id="31">
+  <image width="128" height="128" source="../tiles/brick_tile.png"/>
+ </tile>
+ <tile id="32">
+  <image width="64" height="128" source="../tiles/doodads/torch_3.png"/>
+  <animation>
+   <frame tileid="32" duration="150"/>
+   <frame tileid="33" duration="150"/>
+   <frame tileid="34" duration="150"/>
+  </animation>
+ </tile>
+ <tile id="33">
+  <image width="64" height="128" source="../tiles/doodads/torch_2.png"/>
+ </tile>
+ <tile id="34">
+  <image width="64" height="128" source="../tiles/doodads/torch_1.png"/>
+ </tile>
+ <tile id="35">
+  <image width="128" height="128" source="../tiles/doodads/pitfall.png"/>
+ </tile>
+ <tile id="36">
+  <image width="128" height="128" source="../tiles/cone_start.png.png"/>
+ </tile>
+ <tile id="37">
+  <image width="128" height="128" source="../tiles/pentagon_start.png.png"/>
+ </tile>
+ <tile id="38">
+  <image width="128" height="128" source="../tiles/triangle_start.png.png"/>
  </tile>
 </tileset>

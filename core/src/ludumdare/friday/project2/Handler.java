@@ -12,16 +12,27 @@ public class Handler {
     private int pleaseTakeANumber = 0;
     private World world;
 
+    // nextPlayerSpawnLocation
+    private int nextPSLX = 0;
+    private int nextPSLY = 0;
+
+    // enemy stats
+    private int enemySpeed;
+    private int enemyDamage;
+    private int enemyFireRate;
+
     public Handler(final Project2 game){
         this.game = game;
         objectList = new ArrayList<>();
-        world = new World(this);
-        objectList.add(new Player(8*128, 14*128, this, 100, 3));
-        objectList.add(new Enemy(1536, 150, this, 2, 10));
-        objectList.add(new Enemy(1536, 896, this, 2, 10));
-        objectList.add(new Enemy(150, 896, this, 2, 10));
+        objectList.add(new Player(0, 0, this, 100, 3));
 
-        //    objectList.add(new Benemy(250, 0, this, 1, 2));
+
+        // initialize enemy stats
+        enemySpeed = 2;
+        enemyDamage = 10;
+        enemyFireRate = 2;
+
+        world = new World(this);
     }
 
     public void render(SpriteBatch batch){
@@ -46,4 +57,25 @@ public class Handler {
     public World getWorld() {
         return world;
     }
+
+    public void dispose() {
+        for (GameObject o : objectList) {
+            o.dispose();
+        }
+    }
+
+    public void setPlayerSpawn(int x, int y) {
+        nextPSLX = x;
+        nextPSLY = y;
+    }
+    public int getPlayerSpawnX() { return nextPSLX; }
+    public int getPlayerSpawnY() { return nextPSLY; }
+
+    public int getEnemySpeed() {
+        return enemySpeed;
+    }
+    public int getEnemyDamage() {
+        return enemyDamage;
+    }
+    public int getEnemyFireRate() { return enemyFireRate; }
 }

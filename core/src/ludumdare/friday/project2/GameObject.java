@@ -49,4 +49,6 @@ public abstract class GameObject {
     public boolean hasIFrames() {
         return false;
     }
+
+    public void dispose() { }
 }

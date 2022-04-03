@@ -1,11 +1,14 @@
 package ludumdare.friday.project2;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Align;
+
+import java.util.Random;
 
 public class Enemy extends Moving{
 
@@ -16,6 +19,10 @@ public class Enemy extends Moving{
 
     private TextureAtlas atlas;
     private int damage;
+
+    private Sound discountCat;
+    private float soundTimer;
+    private Random random = new Random();
 
     public Enemy(int posX, int posY, Handler handler, int speed, int damage){
         super(posX, posY, handler, speed);
@@ -29,26 +36,48 @@ public class Enemy extends Moving{
         for (String s : walkAnimations) {
             animator.addAnimationByRegion(atlas, s);
         }
+
+        // Sound Initialization
+        discountCat = Gdx.audio.newSound(Gdx.files.internal("./audio/penta_noise.mp3"));
+        soundTimer = 10f;
     }
 
     public void render(SpriteBatch batch) {
         // encapsulation babyyyy
-     //   Rectangle rect = getRectangle();
-     //   System.out.println(rect.x + ", " + (rect.y) + "\n" + (rect.x+ rect.width) + ", " + (rect.y + rect.height));
         if (!active && handler.game.gameScreen.getCameraRect() != null && getRectangle().overlaps(handler.game.gameScreen.getCameraRect())) {
             active = true;
-         //   System.out.println("inside");
         }
         if (active) {
             super.render(batch);
             detectDamage();
+            makeNoise();
             search();
         }
     }
 
-    public void activate() {
-        active = true;
+    public void makeNoise() {
+        soundTimer -= Gdx.graphics.getDeltaTime();
+        if (soundTimer <= 0) {
+            soundTimer = random.nextInt(3)+5;
 
+            discountCat.play(handler.game.getVolume()*getSpatialLevel());
+        //    System.out.println(distScalar);
+        //    System.out.println(handler.game.getVolume()*distScalar);
+        }
+    }
+
+    public float getSpatialLevel() {
+        float distScalar = (float) Math.sqrt(Math.pow(handler.getPlayer().getPosX()-getPosX(), 2) + Math.pow(handler.getPlayer().getPosY()-getPosY(), 2));
+
+        float cameraWidth = handler.game.gameScreen.getCameraRect().width;
+        //    System.out.println("cameraWidth: " + cameraWidth);
+        //    System.out.println("distScalar: " + distScalar);
+        if (distScalar > cameraWidth) {
+            distScalar = .25f;
+        } else {
+            distScalar = (cameraWidth - distScalar) / cameraWidth + .1f;
+        }
+        return distScalar;
     }
 
     public void detectDamage() {
@@ -93,6 +122,11 @@ public class Enemy extends Moving{
         }
 
 
+    }
+
+    @Override
+    public void dispose() {
+        discountCat.dispose();
     }
 
 

@@ -1,5 +1,6 @@
 package ludumdare.friday.project2;
 
+import com.badlogic.gdx.Audio;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -52,16 +53,6 @@ public class GameScreen implements Screen {
     public GameScreen(Project2 game) {
         this.game = game;
 
-        // background s p a c e
-     //   mapSprite = new Sprite(new Texture(Gdx.files.internal("./galaxy.png")));
-     //   mapSprite.setPosition(0,0);
-     //   mapSprite.setSize(WORLD_WIDTH, WORLD_HEIGHT);
-
-        // measuring stick for pixels
-       // measuring = new Sprite(new Texture(Gdx.files.internal("./measure.png")));
-       // measuring.setPosition(0,0);
-       // measuring.setSize(128,128);
-
         // gets the aspect ratio of the device, which in our case is always 1920x1080 thanks to DesktopLauncher
         float screenRatio = (float) Gdx.graphics.getWidth() / (float) Gdx.graphics.getHeight();
         // ViewPort Percentage
@@ -88,6 +79,9 @@ public class GameScreen implements Screen {
         WORLD_WIDTH = game.handler.getWorld().getCurrentLevel().getNumHorizontalTiles()*128;
 
         renderer = new OrthogonalTiledMapRenderer(map, 1f);
+
+        game.handler.getPlayer().setPosX(game.handler.getPlayerSpawnX());
+        game.handler.getPlayer().setPosY(game.handler.getPlayerSpawnY());
     }
 
     public Rectangle getCameraRect() {
@@ -101,7 +95,7 @@ public class GameScreen implements Screen {
     @Override
     public void show() {
         // Called when this screen becomes the current screen for a Game.
-        cameraRect = null;
+        //game.startMusic();
     }
 
     @Override
@@ -109,8 +103,8 @@ public class GameScreen implements Screen {
         if (!oneFrame) {
             cameraRect = new Rectangle(viewport.getCamera().position.x - viewport.getCamera().viewportWidth/2f,
                     viewport.getCamera().position.y - viewport.getCamera().viewportHeight/2f,
-                    viewport.getCamera().position.x + viewport.getCamera().viewportWidth/2f,
-                    viewport.getCamera().position.y + viewport.getCamera().viewportHeight/2f);
+                    viewport.getCamera().viewportWidth,
+                    viewport.getCamera().viewportHeight);
         } else {
             oneFrame = false;
         }
@@ -184,5 +178,6 @@ public class GameScreen implements Screen {
         // Called when this screen should release all resources.
 
         mapSprite.getTexture().dispose();
+        game.handler.dispose();
     }
 }

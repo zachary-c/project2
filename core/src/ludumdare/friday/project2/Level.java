@@ -2,6 +2,7 @@ package ludumdare.friday.project2;
 
 
 
+import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 
@@ -24,12 +25,16 @@ public class Level {
 
     private int tileSize = 128;
 
+    public static final int PLAYER_SPAWN_ID = 39;
+    public static final int PENTAGON_START = 38;
+    public static final int BEN_START = 37;
+
     public Level(Handler handler, String tmxFile, String tsxFile){
         this.tmxFile = tmxFile;
         this.tsxFile = tsxFile;
         objectList = new ArrayList<>();
         this.handler = handler;
-        autoWalls = makeWalls(tmxFile, tsxFile, (TiledMapTileLayer) new TmxMapLoader().load(tmxFile).getLayers().get(0));
+        autoWalls = makeWalls(tmxFile, tsxFile, new TmxMapLoader().load(tmxFile));
     }
 
     public String getTmxFilePath() { return tmxFile; }
@@ -42,40 +47,61 @@ public class Level {
         return autoWalls;
     }
 
-    public ArrayList<Wall> makeWalls(String tmxFP, String tsxFP, TiledMapTileLayer map) {
+    public ArrayList<Wall> makeWalls(String tmxFP, String tsxFP, TiledMap map) {
         int[] wallNumbers = loadTileSetFileBackwards(tsxFP);
-       // int[][] map = getLevelCSVData(tmxFP);
 
-        try {
-            int[] dimensions = getLevelDimensions(tmxFile);
-            numHorizontalTiles = dimensions[0];
-            numVerticalTiles = dimensions[1];
-     //       System.out.println(numHorizontalTiles + ", " + numVerticalTiles);
-        } catch (FileNotFoundException f) {
-            f.printStackTrace();
-        }
+        TiledMapTileLayer layer = (TiledMapTileLayer) (map.getLayers().get(0));
+        TiledMapTileLayer layer2 = (TiledMapTileLayer) (map.getLayers().get(1));
 
+
+
+        // list of walls to return
         ArrayList<Wall> walls = new ArrayList<>();
+        numHorizontalTiles = layer.getWidth();
+        numVerticalTiles = layer.getHeight();
 
+
+        // adds walls, prints out an ascii depiction of the walls on the map
         boolean printedX = false;
         for (int i = numVerticalTiles-1; i >= 0; i--) {
             for (int j = 0; j < numHorizontalTiles; j++) {
             //    System.out.println(j + ", " + i);
                 for (int k = 0; k < wallNumbers.length; k++) {
-                    if (map.getCell(j, i).getTile().getId() == wallNumbers[k]) {
+                    if (layer.getCell(j, i).getTile().getId() == wallNumbers[k]) {
                         walls.add(new Wall(j*tileSize, i*tileSize, handler));
-                        System.out.print("X ");
+                //        System.out.print("X ");
                         printedX = true;
                         break;
                     }
                 }
+
+                if (layer2.getCell(j,i) != null) {
+                    int layerCID = layer2.getCell(j, i).getTile().getId();
+                    System.out.println("found not null layer cell at " + j + ", " + i);
+                    System.out.println("this has layer ID: " + layerCID);
+                    for (int k2 = 0; k2 < 3; k2++) {
+                        if (layerCID == PLAYER_SPAWN_ID) {
+                            System.out.println("spawning player at " + j*tileSize + ", " +i*tileSize);
+                            handler.setPlayerSpawn(j*tileSize,i*tileSize);
+                        } else if (layerCID == PENTAGON_START) {
+                            System.out.println("spawning pentagon at " + j*tileSize + ", " +i*tileSize);
+                            handler.getObjectList().add(new Enemy(j*tileSize, i*tileSize, handler, handler.getEnemySpeed(), handler.getEnemyDamage()));
+                        } else if (layerCID == BEN_START) {
+                            System.out.println("spawning benemy at " + j*tileSize + ", " +i*tileSize);
+                            handler.getObjectList().add(new Benemy(j*tileSize, i*tileSize, handler, handler.getEnemySpeed(), handler.getEnemyFireRate()));
+                        }
+                    }
+                }
+
+
                 if (!printedX) {
-                    System.out.print("  ");
+              //      System.out.print("  ");
                 }
                 printedX = false;
             }
             System.out.println();
         }
+
         return walls;
 
     }
@@ -152,7 +178,7 @@ public class Level {
         System.out.println();
         return wallIDs;
     }
-
+    /*
     public int[][] getLevelCSVData(String filepath) {
         int[][] map = new int[numVerticalTiles][numHorizontalTiles];
         StringBuilder dataset = new StringBuilder();
@@ -195,7 +221,7 @@ public class Level {
         return map;
 
         //objectList.add(new Doodad();
-    }
+    } */
 
     public int[] getLevelDimensions(String tmxFile) throws FileNotFoundException {
         Scanner scnr = new Scanner(new File(tmxFile));

@@ -52,7 +52,7 @@ public class Animator {
         // then we put it into the animation hashmap paired with its name
 
         if (name.equals("anna_ka")) {
-            temp.setFrameDuration(.5f);
+            temp.setFrameDuration(.7f);
         }
         animations.put(name, temp);
         if (currentAnim == null) {
