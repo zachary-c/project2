@@ -41,7 +41,7 @@
   <image width="128" height="128" source="../tiles/Walls/right_shadow.png"/>
  </tile>
  <tile id="13">
-  <image width="128" height="128" source="../tiles/Walls/top_wall.png"/>
+  <image width="128" height="128" source="../tiles/Walls/bl_corner.png"/>
  </tile>
  <tile id="14">
   <image width="128" height="128" source="../tiles/Walls/left_wall.png"/>

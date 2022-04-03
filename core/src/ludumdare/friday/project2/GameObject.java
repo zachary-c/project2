@@ -7,10 +7,12 @@ public abstract class GameObject {
 
     private int posX;
     private int posY;
+    private int id;
     protected Handler handler;
     protected float camera_ratio;
 
     public GameObject(int posX, int posY, Handler handler){
+        id = handler.getNextID();
         this.posX = posX;
         this.posY = posY;
         this.handler = handler;
@@ -38,5 +40,13 @@ public abstract class GameObject {
     }
     public Rectangle getRectangle() {
         return null;
+    }
+
+    public int getID() {
+        return id;
+    }
+
+    public boolean hasIFrames() {
+        return false;
     }
 }

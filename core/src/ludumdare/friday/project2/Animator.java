@@ -22,7 +22,7 @@ public class Animator {
     private float width, height;
     private float stateTime;
 
-    private GameObject owner;
+    private final GameObject owner;
 
     //private float scale = 1f;
 
@@ -51,6 +51,9 @@ public class Animator {
         Animation<TextureRegion> temp = new Animation<TextureRegion>(0.09f, atlas.findRegions(name), Animation.PlayMode.LOOP);
         // then we put it into the animation hashmap paired with its name
 
+        if (name.equals("anna_ka")) {
+            temp.setFrameDuration(.5f);
+        }
         animations.put(name, temp);
         if (currentAnim == null) {
             currentAnim = animations.keySet().iterator().next();
@@ -63,9 +66,21 @@ public class Animator {
         stateTime += Gdx.graphics.getDeltaTime(); // Accumulate elapsed animation time
 
         // Get current frame of animation for the current stateTime
+        if (animations.get(currentAnim) == null) {
+            System.out.println(currentAnim);
+        }
         currentFrame = animations.get(currentAnim).getKeyFrame(stateTime, true);
 
-        batch.draw(currentFrame, owner.getPosX(), owner.getPosY(), width, height); // Draw current frame at the owner's x and y coords
+        if (owner.hasIFrames()) {
+            float frames = ((Player) owner).getIFrames();
+            float flash = (float) (Math.abs(Math.sin(frames*10)));
+            batch.setColor(1,1,.7f,flash);
+            batch.draw(currentFrame, owner.getPosX(), owner.getPosY(), width, height); // Draw current frame at the owner's x and y coords
+            batch.setColor(1,1,1,1);
+        } else {
+            batch.draw(currentFrame, owner.getPosX(), owner.getPosY(), width, height); // Draw current frame at the owner's x and y coords
+        }
+
         if (Project2.HITBOXES) {
             shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
             shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
@@ -77,6 +92,14 @@ public class Animator {
 
     public Rectangle getRectangle() {
         return new Rectangle(owner.getPosX(), owner.getPosY(), width, height);
+    }
+
+    public float getWidth() {
+        return width;
+    }
+
+    public float getHeight() {
+        return height;
     }
 
     //public void setScaling(float scale) {

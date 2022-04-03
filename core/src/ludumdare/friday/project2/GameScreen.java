@@ -11,28 +11,40 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import javax.swing.text.View;
+import java.io.File;
+import java.io.FileNotFoundException;
+
 public class GameScreen implements Screen {
     final Project2 game;
 
-    public static final int WORLD_WIDTH = 1920;
-    public static final int WORLD_HEIGHT = 1080;
-    private OrthographicCamera camera;
+    public int WORLD_WIDTH = 2048; //  default 16:9 * 128 pixels per tile
+    public int WORLD_HEIGHT = 1152;
     float camera_ratio;
 
-
     private final Viewport viewport;
-    private final OrthogonalTiledMapRenderer renderer;
-    int tileSize;
+    private OrthogonalTiledMapRenderer renderer;
 
-    Background stage;
-    TextureRegion oneTile;
+    private Rectangle cameraRect;
+
+    private final int vWidth;
+    private final int vHeight;
+
+    TiledMap map;
+
+    private String level0 = "./tileLevel/Level02.tmx";
+
+    private boolean oneFrame = true;
+
 
     private Sprite mapSprite;
     private Sprite measuring;
@@ -40,46 +52,69 @@ public class GameScreen implements Screen {
     public GameScreen(Project2 game) {
         this.game = game;
 
-
-        //oneTile = new TextureRegion(layer.getCell(0,0).getTile().getTextureRegion());
-
         // background s p a c e
-        mapSprite = new Sprite(new Texture(Gdx.files.internal("./galaxy.png")));
-        mapSprite.setPosition(0,0);
-        mapSprite.setSize(WORLD_WIDTH, WORLD_HEIGHT);
+     //   mapSprite = new Sprite(new Texture(Gdx.files.internal("./galaxy.png")));
+     //   mapSprite.setPosition(0,0);
+     //   mapSprite.setSize(WORLD_WIDTH, WORLD_HEIGHT);
 
         // measuring stick for pixels
-        measuring = new Sprite(new Texture(Gdx.files.internal("./measure.png")));
-        measuring.setPosition(0,0);
-        measuring.setSize(128,128);
+       // measuring = new Sprite(new Texture(Gdx.files.internal("./measure.png")));
+       // measuring.setPosition(0,0);
+       // measuring.setSize(128,128);
 
         // gets the aspect ratio of the device, which in our case is always 1920x1080 thanks to DesktopLauncher
         float screenRatio = (float) Gdx.graphics.getWidth() / (float) Gdx.graphics.getHeight();
         // ViewPort Percentage
         float viewportPercent = .30f;
-        float vPortion = viewportPercent * WORLD_WIDTH;
+        vWidth = (int) (viewportPercent * WORLD_WIDTH);
+        vHeight = (int) (vWidth * (1/screenRatio));
 
         // load the tilemap
-        TiledMap map = new TmxMapLoader().load("./tileLevel/Level0.tmx");
-        // get the tilesize of the first layer
-        tileSize = ((TiledMapTileLayer) map.getLayers().get(0)).getTileWidth();
+        map = new TmxMapLoader().load(level0);
         // create a viewport to see through, set it up to be a portion of the tilemap
-        viewport = new FitViewport(vPortion, vPortion * (1/screenRatio));
+        viewport = new FitViewport(vWidth, vHeight);
         // create the renderer, set the unitScale (ratio of pixels to tiles
-        renderer = new OrthogonalTiledMapRenderer(map, 1f);
+
+        cameraRect = null;
 
         // does nothing atm, is multiplied to all the sprites
         camera_ratio = 1;
 
     }
 
+    public void initializeLevel(String tmxFile) {
+        map = new TmxMapLoader().load(tmxFile);
+        WORLD_HEIGHT = game.handler.getWorld().getCurrentLevel().getNumVerticalTiles()*128;
+        WORLD_WIDTH = game.handler.getWorld().getCurrentLevel().getNumHorizontalTiles()*128;
+
+        renderer = new OrthogonalTiledMapRenderer(map, 1f);
+    }
+
+    public Rectangle getCameraRect() {
+        return cameraRect;
+    }
+
+    public Viewport getViewport() {
+        return viewport;
+    }
+
     @Override
     public void show() {
         // Called when this screen becomes the current screen for a Game.
+        cameraRect = null;
     }
 
     @Override
     public void render(float delta) {
+        if (!oneFrame) {
+            cameraRect = new Rectangle(viewport.getCamera().position.x - viewport.getCamera().viewportWidth/2f,
+                    viewport.getCamera().position.y - viewport.getCamera().viewportHeight/2f,
+                    viewport.getCamera().position.x + viewport.getCamera().viewportWidth/2f,
+                    viewport.getCamera().position.y + viewport.getCamera().viewportHeight/2f);
+        } else {
+            oneFrame = false;
+        }
+
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         game.batch.setProjectionMatrix(viewport.getCamera().combined);
@@ -97,7 +132,8 @@ public class GameScreen implements Screen {
 
         game.batch.begin();
         game.handler.render(game.batch);
-        measuring.draw(game.batch);
+        game.hud.render(game.batch);
+     //   measuring.draw(game.batch);
         game.batch.end();
 
         game.backEnd.render();
@@ -148,6 +184,5 @@ public class GameScreen implements Screen {
         // Called when this screen should release all resources.
 
         mapSprite.getTexture().dispose();
-        stage.dispose();
     }
 }

@@ -60,6 +60,20 @@ anna_front
   orig: 76, 177
   offset: 0, 0
   index: 1
+anna_ka
+  rotate: false
+  xy: 630, 181
+  size: 75, 177
+  orig: 75, 177
+  offset: 0, 0
+  index: 0
+anna_ka
+  rotate: false
+  xy: 630, 2
+  size: 75, 177
+  orig: 75, 177
+  offset: 0, 0
+  index: 1
 anna_left
   rotate: false
   xy: 160, 181

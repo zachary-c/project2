@@ -18,6 +18,7 @@ public class Project2 extends Game {
 
 	public MainMenuScreen menuScreen;
 	public GameScreen gameScreen;
+	public HUD hud;
 
 	private static ActiveScreen actScr;
 
@@ -27,7 +28,7 @@ public class Project2 extends Game {
 	public static final float SPRITE_SPEED_SCALE = 1f;
 	public static final boolean Y_DOWN = false;
 	public static final boolean HITBOXES = false;
-	public static final boolean DEV = false;
+	public static final boolean DEV = true;
 
 	// LibGDX uses a native library, which needs to be loaded into memory before we can start working with it.
 	// So the only safe place we have to instantiate LibGDX objects is in the create method.
@@ -40,9 +41,13 @@ public class Project2 extends Game {
 
 		gameScreen = new GameScreen(this);
 		handler = new Handler(this);
+		hud = new HUD(handler);
 
 		font = new BitmapFont(new FileHandle(new File("./fonts/project2.fnt")), Y_DOWN);
 		font.getData().setScale(2.0f);
+
+		// post construction work
+		gameScreen.initializeLevel(handler.getWorld().getCurrentLevel().getTmxFilePath());
 
 		backEnd = new BackEnd(this);
 		this.setScreen(menuScreen);

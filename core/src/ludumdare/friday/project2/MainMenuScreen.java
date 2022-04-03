@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -17,7 +18,11 @@ public class MainMenuScreen implements Screen {
     final Project2 game;
 
     private Sprite background;
+    private float titleScalar = 1f;
+    private float scaleTimer = 1f;
     OrthographicCamera camera;
+
+    TextButton button;
 
     public MainMenuScreen(final Project2 game) {
         this.game = game;
@@ -27,9 +32,12 @@ public class MainMenuScreen implements Screen {
         camera.position.set(Project2.WINDOW_WIDTH / 2f, Project2.WINDOW_HEIGHT / 2f, 0f);
 
 
-        Texture texture = new Texture(Gdx.files.internal("heartbeat.jpg"));
-        background = new Sprite(texture);
-       // background.scale();
+        Texture buttonTexture = new Texture(Gdx.files.internal("./menu/button.png"));
+        background = new Sprite(new Texture(Gdx.files.internal("./menu/blank_slate.png")));
+      //  button = new TextButton();
+      //  button.scale(.5f);
+      //  button.setPosition(250, (Project2.WINDOW_HEIGHT)/2f - (button.getHeight()+20));
+        // background.scale();
         background.setPosition(0,0);
     }
 
@@ -43,10 +51,21 @@ public class MainMenuScreen implements Screen {
         game.batch.begin();
 
         background.draw(game.batch);
+        scaleTimer += delta;
 
-        game.font.setColor(1,1,1,1);
-        game.font.draw(game.batch, "Project2!", 60, (Project2.WINDOW_HEIGHT*14)/15.0f, Project2.WINDOW_WIDTH, Align.left, true);
-        //game.font.draw(game.batch, "let's begin", 100, 100);
+        titleScalar = (float) (3 + .4*Math.sin(10*scaleTimer));
+
+        game.font.setColor(0,0,0,1);
+        game.font.getData().setScale(titleScalar);
+        game.font.draw(game.batch, "Project 2!", 60, (Project2.WINDOW_HEIGHT*14)/15.0f, Project2.WINDOW_WIDTH, Align.left, true);
+
+      //  if (button.getBoundingRectangle().contains(Gdx.input.getX(), Gdx.input.getY())) {
+      //      button.setColor(1, .6f, .6f, 1);
+      //  } else {
+      //      button.setColor(.6f,1,.6f,1);
+      //  }
+      //  button.draw(game.batch);
+
 
         game.batch.end();
 
