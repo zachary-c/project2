@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -40,15 +41,7 @@ public class GameScreen implements Screen {
     private final int vWidth;
     private final int vHeight;
 
-    TiledMap map;
-
-    private String level0 = "./tileLevel/Level02.tmx";
-
     private boolean oneFrame = true;
-
-
-    private Sprite mapSprite;
-    private Sprite measuring;
 
     public GameScreen(Project2 game) {
         this.game = game;
@@ -60,8 +53,6 @@ public class GameScreen implements Screen {
         vWidth = (int) (viewportPercent * WORLD_WIDTH);
         vHeight = (int) (vWidth * (1/screenRatio));
 
-        // load the tilemap
-        map = new TmxMapLoader().load(level0);
         // create a viewport to see through, set it up to be a portion of the tilemap
         viewport = new FitViewport(vWidth, vHeight);
         // create the renderer, set the unitScale (ratio of pixels to tiles
@@ -73,15 +64,14 @@ public class GameScreen implements Screen {
 
     }
 
-    public void initializeLevel(String tmxFile) {
-        map = new TmxMapLoader().load(tmxFile);
+    public void initializeLevel(TiledMap map) {
         WORLD_HEIGHT = game.handler.getWorld().getCurrentLevel().getNumVerticalTiles()*128;
         WORLD_WIDTH = game.handler.getWorld().getCurrentLevel().getNumHorizontalTiles()*128;
 
         renderer = new OrthogonalTiledMapRenderer(map, 1f);
 
-        game.handler.getPlayer().setPosX(game.handler.getPlayerSpawnX());
-        game.handler.getPlayer().setPosY(game.handler.getPlayerSpawnY());
+    //    game.handler.getPlayer().setPosX(game.handler.getPlayerSpawnX());
+    //    game.handler.getPlayer().setPosY(game.handler.getPlayerSpawnY());
     }
 
     public Rectangle getCameraRect() {
@@ -127,7 +117,6 @@ public class GameScreen implements Screen {
         game.batch.begin();
         game.handler.render(game.batch);
         game.hud.render(game.batch);
-     //   measuring.draw(game.batch);
         game.batch.end();
 
         game.backEnd.render();
@@ -176,8 +165,6 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         // Called when this screen should release all resources.
-
-        mapSprite.getTexture().dispose();
         game.handler.dispose();
     }
 }

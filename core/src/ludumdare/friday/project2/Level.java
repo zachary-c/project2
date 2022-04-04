@@ -5,6 +5,7 @@ package ludumdare.friday.project2;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.math.Rectangle;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,33 +16,53 @@ public class Level {
 
     private int numHorizontalTiles = 16;
     private int numVerticalTiles = 9;
-
-    private ArrayList<GameObject> objectList;
-    private ArrayList<Wall> autoWalls;
     private Handler handler;
 
     private String tmxFile;
-    private String tsxFile;
-
-    private int tileSize = 128;
+    private TiledMap tiledMap;
+    private ArrayList<GameObject> levelGameObjects;
+    private ArrayList<Wall> autoWalls;
+    private int playerSpawnX;
+    private int playerSpawnY;
+    private Rectangle exitSquare;
 
     public static final int PLAYER_SPAWN_ID = 39;
     public static final int PENTAGON_START = 38;
     public static final int BEN_START = 37;
+    public static final int DOOR = 40;
+    public static final int MICHAEL_WAVE = 42;
+    public static final int EXIT = 41;
 
-    public Level(Handler handler, String tmxFile, String tsxFile){
+    // initialized in makeWalls below
+    // make walls is really just becoming a catchall initialize map huh
+    // alas
+
+    private static final String TSX_FILE_PATH = "./tileSet/Level0.tsx";
+    private static final int tileSize = 128;
+
+    public Level(Handler handler, String tmxFile){
         this.tmxFile = tmxFile;
-        this.tsxFile = tsxFile;
-        objectList = new ArrayList<>();
+        levelGameObjects = new ArrayList<>();
         this.handler = handler;
-        autoWalls = makeWalls(tmxFile, tsxFile, new TmxMapLoader().load(tmxFile));
+        tiledMap = new TmxMapLoader().load(tmxFile);
+        autoWalls = makeWalls(tmxFile, TSX_FILE_PATH, tiledMap);
     }
 
     public String getTmxFilePath() { return tmxFile; }
-    public String getTsxFilePath() { return tsxFile; }
+
+    public TiledMap getTiledMap() { return tiledMap; }
+
+    public Rectangle getExitSquare() { return exitSquare; }
 
     public int getNumVerticalTiles() { return numVerticalTiles; }
     public int getNumHorizontalTiles() { return numHorizontalTiles; }
+
+    public int getPlayerSpawnX() { return playerSpawnX; }
+    public int getPlayerSpawnY() { return playerSpawnY; }
+
+    public ArrayList<GameObject> getLevelGameObjects() {
+        return levelGameObjects;
+    }
 
     public ArrayList<Wall> getAutoWalls() {
         return autoWalls;
@@ -62,42 +83,56 @@ public class Level {
 
 
         // adds walls, prints out an ascii depiction of the walls on the map
-        boolean printedX = false;
         for (int i = numVerticalTiles-1; i >= 0; i--) {
             for (int j = 0; j < numHorizontalTiles; j++) {
             //    System.out.println(j + ", " + i);
+                boolean addWall = false;
                 for (int k = 0; k < wallNumbers.length; k++) {
                     if (layer.getCell(j, i).getTile().getId() == wallNumbers[k]) {
-                        walls.add(new Wall(j*tileSize, i*tileSize, handler));
-                //        System.out.print("X ");
-                        printedX = true;
+                        addWall = true;
+                        System.out.print("X ");
                         break;
                     }
                 }
 
+                // while we're iterating through, might as well check layer2 for spawns, doors michaelwaves
                 if (layer2.getCell(j,i) != null) {
                     int layerCID = layer2.getCell(j, i).getTile().getId();
-                    System.out.println("found not null layer cell at " + j + ", " + i);
-                    System.out.println("this has layer ID: " + layerCID);
-                    for (int k2 = 0; k2 < 3; k2++) {
-                        if (layerCID == PLAYER_SPAWN_ID) {
-                            System.out.println("spawning player at " + j*tileSize + ", " +i*tileSize);
-                            handler.setPlayerSpawn(j*tileSize,i*tileSize);
-                        } else if (layerCID == PENTAGON_START) {
-                            System.out.println("spawning pentagon at " + j*tileSize + ", " +i*tileSize);
-                            handler.getObjectList().add(new Enemy(j*tileSize, i*tileSize, handler, handler.getEnemySpeed(), handler.getEnemyDamage()));
-                        } else if (layerCID == BEN_START) {
-                            System.out.println("spawning benemy at " + j*tileSize + ", " +i*tileSize);
-                            handler.getObjectList().add(new Benemy(j*tileSize, i*tileSize, handler, handler.getEnemySpeed(), handler.getEnemyFireRate()));
+                 //   System.out.println("found layer CID: " + layerCID);
+           //         System.out.println("found not null layer cell at " + j + ", " + i);
+           //         System.out.println("this has layer ID: " + layerCID);
+                    if (layerCID == PLAYER_SPAWN_ID) {
+           //             System.out.println("spawning player at " + j*tileSize + ", " +i*tileSize);
+                        layer2.setCell(j, i, null);
+                        playerSpawnX = j*tileSize;
+                        playerSpawnY = i*tileSize;
+                    } else if (layerCID == PENTAGON_START) {
+                        System.out.println("spawning pentagon at " + j*tileSize + ", " +i*tileSize);
+                        layer2.setCell(j, i, null);
+                        levelGameObjects.add(new Enemy(j*tileSize, i*tileSize, handler, handler.getEnemySpeed(), handler.getEnemyDamage()));
+                    } else if (layerCID == BEN_START) {
+                        layer2.setCell(j, i, null);
+              //          System.out.println("spawning benemy at " + j*tileSize + ", " +i*tileSize);
+                        levelGameObjects.add(new Benemy(j*tileSize, i*tileSize, handler, handler.getEnemySpeed(), handler.getEnemyFireRate()));
+                    } else if (layerCID == EXIT) {
+                        exitSquare = new Rectangle(j*128, i*128, 128,128);
+                        addWall = false;
+                    }
+                    else if (layerCID == DOOR) {
+                        if (exitSquare == null) {
+                            exitSquare = new Rectangle(j*128, i*128, 128,128);
                         }
+                        addWall = false;
+                    }  else if (layerCID == MICHAEL_WAVE) {
+                        addWall = false;
                     }
                 }
 
-
-                if (!printedX) {
-              //      System.out.print("  ");
+                if (addWall) {
+                    walls.add(new Wall(j*tileSize, i*tileSize, handler));
+                } else {
+                    System.out.print("  ");
                 }
-                printedX = false;
             }
             System.out.println();
         }
@@ -120,7 +155,7 @@ public class Level {
                 if (currLine.startsWith("  <image ")) {
                     if (currLine.substring(20,currLine.length()-1).contains("_wall") || currLine.substring(20,currLine.length()-1).contains("_corner") || currLine.substring(20,currLine.length()-1).contains("pillar")) {
                         wallFound = true;
-                        System.out.println("wall found");
+               //         System.out.println("wall found");
                     }
 
                 } else if (currLine.startsWith(" <tile id=") && wallFound) {

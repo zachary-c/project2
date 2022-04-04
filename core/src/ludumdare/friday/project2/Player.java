@@ -6,11 +6,12 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Rectangle;
 
 import java.util.ArrayList;
 
-public class Player extends Moving {
+public class Player extends Solid {
 
     private int health;
     private ArrayList<GameObject> inventory;
@@ -23,6 +24,8 @@ public class Player extends Moving {
     private TextureAtlas atlas;
     private float iframes;
 
+    private boolean onExit;
+
     public Player(int posX, int posY, Handler handler, int health, int speed)
     {
         super(posX, posY, handler, speed);
@@ -31,11 +34,14 @@ public class Player extends Moving {
         inventory = new ArrayList<>();
 
         atlas = new TextureAtlas(Gdx.files.internal("./walkin/walkin.atlas"));
+        onExit = false;
 
         // load each of the animations provided by the walkAnimations array into the animator
         for (String s : walkAnimations) {
             animator.addAnimationByRegion(atlas, s);
         }
+        animator.setAnimationSpeed("anna_ka", .9f);
+
         // damageSound
         damageSound = Gdx.audio.newSound(Gdx.files.internal("./audio/anna_hurt.mp3"));
 
@@ -46,8 +52,17 @@ public class Player extends Moving {
         // encapsulation babyyyy
         super.render(batch);
         updateIFrames(Gdx.graphics.getDeltaTime());
+        checkExit();
         keyHandler();
    //     System.out.println(getRectangle().overlaps(handler.game.gameScreen.getCameraRect()));
+    }
+
+    private void checkExit() {
+        if (handler.getWorld().getCurrentLevel().getExitSquare().overlaps(getRectangle())) {
+            onExit = true;
+        } else {
+            onExit = false;
+        }
     }
 
     private void updateIFrames(float delta) {
@@ -91,9 +106,18 @@ public class Player extends Moving {
         } else {
             setVelY(0);
         }
+
+        if (onExit && Gdx.input.isKeyPressed(Input.Keys.E)) {
+            handler.loadNextLevel();
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.H)) {
+        }
+
     }
 
     public void takeDamage(int dmg) {
+       // System.out.println("taking damage");
         if (!(iframes > 0)) {
             health-=dmg;
             iframes+=.75f;

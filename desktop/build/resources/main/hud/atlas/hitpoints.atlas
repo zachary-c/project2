@@ -1,0 +1,160 @@
+
+hitpoints.png
+size: 1024, 1024
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+heartempty
+  rotate: false
+  xy: 646, 858
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+hp10
+  rotate: false
+  xy: 2, 922
+  size: 642, 64
+  orig: 642, 64
+  offset: 0, 0
+  index: -1
+hp20
+  rotate: false
+  xy: 2, 856
+  size: 642, 64
+  orig: 642, 64
+  offset: 0, 0
+  index: -1
+hp30
+  rotate: false
+  xy: 2, 790
+  size: 642, 64
+  orig: 642, 64
+  offset: 0, 0
+  index: -1
+hp40
+  rotate: false
+  xy: 2, 724
+  size: 642, 64
+  orig: 642, 64
+  offset: 0, 0
+  index: -1
+hp50
+  rotate: false
+  xy: 2, 658
+  size: 642, 64
+  orig: 642, 64
+  offset: 0, 0
+  index: -1
+hp60
+  rotate: false
+  xy: 2, 592
+  size: 642, 64
+  orig: 642, 64
+  offset: 0, 0
+  index: -1
+hp70
+  rotate: false
+  xy: 2, 526
+  size: 642, 64
+  orig: 642, 64
+  offset: 0, 0
+  index: -1
+hp80
+  rotate: false
+  xy: 2, 460
+  size: 642, 64
+  orig: 642, 64
+  offset: 0, 0
+  index: -1
+hp90
+  rotate: false
+  xy: 2, 394
+  size: 642, 64
+  orig: 642, 64
+  offset: 0, 0
+  index: -1
+hp100
+  rotate: false
+  xy: 2, 328
+  size: 642, 64
+  orig: 642, 64
+  offset: 0, 0
+  index: -1
+hp0
+  rotate: false
+  xy: 2, 262
+  size: 642, 64
+  orig: 642, 64
+  offset: 0, 0
+  index: -1
+purple1
+  rotate: false
+  xy: 2, 132
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+purple2
+  rotate: false
+  xy: 646, 728
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+purple3
+  rotate: false
+  xy: 776, 858
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+purple4
+  rotate: false
+  xy: 2, 2
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+purplefull
+  rotate: false
+  xy: 132, 132
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+red1
+  rotate: false
+  xy: 646, 598
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+red2
+  rotate: false
+  xy: 776, 728
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+red3
+  rotate: false
+  xy: 132, 2
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+red4
+  rotate: false
+  xy: 262, 132
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+redfull
+  rotate: false
+  xy: 646, 468
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1

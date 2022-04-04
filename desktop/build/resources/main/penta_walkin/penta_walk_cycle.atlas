@@ -1,0 +1,118 @@
+
+penta_walk_cycle.png
+size: 1024, 512
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+pendalton_back
+  rotate: false
+  xy: 2, 181
+  size: 77, 177
+  orig: 77, 177
+  offset: 0, 0
+  index: 1
+pendalton_back
+  rotate: false
+  xy: 2, 2
+  size: 77, 177
+  orig: 77, 177
+  offset: 0, 0
+  index: 2
+pendalton_back
+  rotate: false
+  xy: 81, 181
+  size: 77, 177
+  orig: 77, 177
+  offset: 0, 0
+  index: 3
+pendalton_back
+  rotate: false
+  xy: 81, 2
+  size: 77, 177
+  orig: 77, 177
+  offset: 0, 0
+  index: 4
+pendalton_front
+  rotate: false
+  xy: 160, 181
+  size: 77, 177
+  orig: 77, 177
+  offset: 0, 0
+  index: 1
+pendalton_front
+  rotate: false
+  xy: 160, 2
+  size: 77, 177
+  orig: 77, 177
+  offset: 0, 0
+  index: 2
+pendalton_front
+  rotate: false
+  xy: 239, 181
+  size: 77, 177
+  orig: 77, 177
+  offset: 0, 0
+  index: 3
+pendalton_front
+  rotate: false
+  xy: 239, 2
+  size: 77, 177
+  orig: 77, 177
+  offset: 0, 0
+  index: 4
+pendalton_left
+  rotate: false
+  xy: 318, 181
+  size: 77, 177
+  orig: 77, 177
+  offset: 0, 0
+  index: 1
+pendalton_left
+  rotate: false
+  xy: 318, 2
+  size: 77, 177
+  orig: 77, 177
+  offset: 0, 0
+  index: 2
+pendalton_left
+  rotate: false
+  xy: 397, 181
+  size: 77, 177
+  orig: 77, 177
+  offset: 0, 0
+  index: 3
+pendalton_left
+  rotate: false
+  xy: 397, 2
+  size: 77, 177
+  orig: 77, 177
+  offset: 0, 0
+  index: 4
+pendalton_right
+  rotate: false
+  xy: 476, 181
+  size: 77, 177
+  orig: 77, 177
+  offset: 0, 0
+  index: 1
+pendalton_right
+  rotate: false
+  xy: 476, 2
+  size: 77, 177
+  orig: 77, 177
+  offset: 0, 0
+  index: 2
+pendalton_right
+  rotate: false
+  xy: 555, 181
+  size: 77, 177
+  orig: 77, 177
+  offset: 0, 0
+  index: 3
+pendalton_right
+  rotate: false
+  xy: 555, 2
+  size: 77, 177
+  orig: 77, 177
+  offset: 0, 0
+  index: 4

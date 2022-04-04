@@ -23,6 +23,7 @@ public class Animator {
     private float stateTime;
 
     private final GameObject owner;
+    private float projectileAngle;
 
     //private float scale = 1f;
 
@@ -50,16 +51,19 @@ public class Animator {
         // This line takes the given atlas (large sprite file) and loads the animation with the give name ("anna_left_0", "anna_left_1), etc
         Animation<TextureRegion> temp = new Animation<TextureRegion>(0.09f, atlas.findRegions(name), Animation.PlayMode.LOOP);
         // then we put it into the animation hashmap paired with its name
-
-        if (name.equals("anna_ka")) {
-            temp.setFrameDuration(.7f);
-        }
         animations.put(name, temp);
+
+        // if we don't have an animation already
         if (currentAnim == null) {
+            // get one, any of them
             currentAnim = animations.keySet().iterator().next();
-            width = animations.get(currentAnim).getKeyFrame(0).getRegionWidth() * owner.camera_ratio * Project2.SPRITE_SCALE;
+            //
             height = animations.get(currentAnim).getKeyFrame(0).getRegionHeight() * owner.camera_ratio * Project2.SPRITE_SCALE;
+            width = animations.get(currentAnim).getKeyFrame(0).getRegionWidth() * owner.camera_ratio * Project2.SPRITE_SCALE;
         }
+    }
+    public void setAnimationSpeed(String name, float fps) {
+        animations.get(name).setFrameDuration(fps);
     }
 
     public void render(SpriteBatch batch) {
@@ -78,13 +82,19 @@ public class Animator {
             batch.draw(currentFrame, owner.getPosX(), owner.getPosY(), width, height); // Draw current frame at the owner's x and y coords
             batch.setColor(1,1,1,1);
         } else {
-            batch.draw(currentFrame, owner.getPosX(), owner.getPosY(), width, height); // Draw current frame at the owner's x and y coords
+            if (currentAnim.equals("proj")) {
+                batch.draw(currentFrame, owner.getPosX(), owner.getPosY(), 15,15,
+            width*Project2.PROJECTILE_SCALE,height*Project2.PROJECTILE_SCALE, 1, 1, projectileAngle);
+            } else {
+                batch.draw(currentFrame, owner.getPosX(), owner.getPosY(), width, height); // Draw current frame at the owner's x and y coords
+            }
         }
 
         if (Project2.HITBOXES) {
             shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
             shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-            shapeRenderer.rect(owner.getPosX(), owner.getPosY(), width, height);
+            Rectangle me = owner.getRectangle();
+            shapeRenderer.rect(me.x, me.y, me.width, me.height);
             shapeRenderer.end();
         }
     }
@@ -102,12 +112,12 @@ public class Animator {
         return height;
     }
 
-    //public void setScaling(float scale) {
-    //    this.scale = scale;
-    //}
-
     public void setCurrentAnim(String currentAnim) {
         // for changing what animation is playing
         this.currentAnim = currentAnim;
+    }
+
+    public void setRotation(float angle) {
+        projectileAngle = angle;
     }
 }

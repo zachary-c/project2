@@ -1,0 +1,118 @@
+
+ben_walk_cycle.png
+size: 1024, 512
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+ben_back
+  rotate: false
+  xy: 2, 181
+  size: 76, 177
+  orig: 76, 177
+  offset: 0, 0
+  index: 0
+ben_back
+  rotate: false
+  xy: 2, 2
+  size: 76, 177
+  orig: 76, 177
+  offset: 0, 0
+  index: 1
+ben_back
+  rotate: false
+  xy: 80, 181
+  size: 76, 177
+  orig: 76, 177
+  offset: 0, 0
+  index: 2
+ben_back
+  rotate: false
+  xy: 80, 2
+  size: 76, 177
+  orig: 76, 177
+  offset: 0, 0
+  index: 3
+ben_front
+  rotate: false
+  xy: 158, 181
+  size: 76, 177
+  orig: 76, 177
+  offset: 0, 0
+  index: 0
+ben_front
+  rotate: false
+  xy: 158, 2
+  size: 76, 177
+  orig: 76, 177
+  offset: 0, 0
+  index: 1
+ben_front
+  rotate: false
+  xy: 236, 181
+  size: 76, 177
+  orig: 76, 177
+  offset: 0, 0
+  index: 2
+ben_front
+  rotate: false
+  xy: 236, 2
+  size: 76, 177
+  orig: 76, 177
+  offset: 0, 0
+  index: 3
+ben_left
+  rotate: false
+  xy: 314, 181
+  size: 76, 177
+  orig: 76, 177
+  offset: 0, 0
+  index: 0
+ben_left
+  rotate: false
+  xy: 314, 2
+  size: 76, 177
+  orig: 76, 177
+  offset: 0, 0
+  index: 1
+ben_left
+  rotate: false
+  xy: 392, 181
+  size: 76, 177
+  orig: 76, 177
+  offset: 0, 0
+  index: 2
+ben_left
+  rotate: false
+  xy: 392, 2
+  size: 76, 177
+  orig: 76, 177
+  offset: 0, 0
+  index: 3
+ben_right
+  rotate: false
+  xy: 470, 181
+  size: 76, 177
+  orig: 76, 177
+  offset: 0, 0
+  index: 0
+ben_right
+  rotate: false
+  xy: 470, 2
+  size: 76, 177
+  orig: 76, 177
+  offset: 0, 0
+  index: 1
+ben_right
+  rotate: false
+  xy: 548, 181
+  size: 76, 177
+  orig: 76, 177
+  offset: 0, 0
+  index: 2
+ben_right
+  rotate: false
+  xy: 548, 2
+  size: 76, 177
+  orig: 76, 177
+  offset: 0, 0
+  index: 3

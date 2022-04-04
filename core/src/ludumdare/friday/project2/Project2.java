@@ -28,15 +28,17 @@ public class Project2 extends Game {
 	public static final int WINDOW_HEIGHT = 1080;
 	public static final float SPRITE_SCALE = .45f;
 	public static final float SPRITE_SPEED_SCALE = 1f;
+	public static final float PROJECTILE_SCALE = .75f;
 	public static final boolean Y_DOWN = false;
 	public static final boolean HITBOXES = false;
-	public static final boolean DEV = true;
+	public static final boolean DEV = false;
 
 	//public Audio audio;
 	private Music music;
 
 	private float gameVolume;
 	private float musicVolume;
+
 
 	// LibGDX uses a native library, which needs to be loaded into memory before we can start working with it.
 	// So the only safe place we have to instantiate LibGDX objects is in the create method.
@@ -56,7 +58,7 @@ public class Project2 extends Game {
 		font.getData().setScale(2.0f);
 
 		// post construction work
-		gameScreen.initializeLevel(handler.getWorld().getCurrentLevel().getTmxFilePath());
+		gameScreen.initializeLevel(handler.getWorld().getCurrentLevel().getTiledMap());
 		gameVolume = 1f;
 		musicVolume = .75f;
 

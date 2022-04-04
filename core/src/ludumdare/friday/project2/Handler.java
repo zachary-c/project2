@@ -1,9 +1,12 @@
 package ludumdare.friday.project2;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.compression.lzma.Base;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Handler {
     final Project2 game;
@@ -21,11 +24,17 @@ public class Handler {
     private int enemyDamage;
     private int enemyFireRate;
 
+
+    private boolean newLevel = false;
+
+    // this is so things like benemy can add projectiles to the arraylist while they're being rendered without concurrentModificationExceptions
+    private ArrayList<BaseProjectile> projectiles = new ArrayList<>();
+
     public Handler(final Project2 game){
         this.game = game;
         objectList = new ArrayList<>();
+        // we need to add the player first off so they will always be at objectList.get(0) for getPlayer()
         objectList.add(new Player(0, 0, this, 100, 3));
-
 
         // initialize enemy stats
         enemySpeed = 2;
@@ -33,12 +42,77 @@ public class Handler {
         enemyFireRate = 2;
 
         world = new World(this);
+        // put the player at their spawn location
+        getPlayer().setPosX(world.getCurrentLevel().getPlayerSpawnX());
+        getPlayer().setPosY(world.getCurrentLevel().getPlayerSpawnY());
+       // objectList.addAll(world.getCurrentLevel().getLevelGameObjects());
     }
 
     public void render(SpriteBatch batch){
         for (GameObject o : objectList) {
             o.render(batch);
         }
+        for (BaseProjectile bp : projectiles) {
+            bp.render(batch);
+        }
+
+        for (Wall w : world.getCurrentLevel().getAutoWalls()) {
+            w.render(batch);
+        }
+     //   addBufferToList();
+        checkForCollisions();
+        if (newLevel) {
+            System.out.println(world.getCurrentLevel().getLevelGameObjects());
+            objectList.addAll(world.getCurrentLevel().getLevelGameObjects());
+            newLevel = false;
+        }
+    }
+
+    public void checkForCollisions() {
+        boolean removed = false;
+        // iterate through each of the projectiles
+        for (Iterator<BaseProjectile> iterator = projectiles.iterator(); iterator.hasNext();) {
+            BaseProjectile b = iterator.next();
+            // iterate through the list of objects
+            for (GameObject o : objectList) {
+                // confirm that we're not colliding with ourselves
+                if (o.getID() == b.getCreatorID()) {
+                    continue;
+                }
+
+                // if the rectangles overlap
+                if (b.getRectangle().overlaps(o.getRectangle())){
+
+                    // if it's a player, damage them
+                    if (getPlayer().getID() == o.getID()) {
+                        getPlayer().takeDamage(getEnemyDamage());
+                    }
+                    b.explode();
+                    iterator.remove();
+                    removed = true;
+                    break;
+           //         System.out.println("projectile overlaps object");
+                }
+            }
+
+            // if we already deleted the projectile, don't worry about comparing walls
+            if (removed) { continue; }
+            for (Wall w : world.getCurrentLevel().getAutoWalls()) {
+                // if they overlap
+                if (b.getRectangle().overlaps(w.getRectangle())){
+                    b.explode();
+                    iterator.remove();
+                    break;
+                }
+            }
+        }
+    }
+
+    public void loadNextLevel() {
+        game.gameScreen.initializeLevel(world.nextLevel().getTiledMap());
+        newLevel = true;
+        getPlayer().setPosX(world.getCurrentLevel().getPlayerSpawnX());
+        getPlayer().setPosY(world.getCurrentLevel().getPlayerSpawnY());
     }
 
     public ArrayList<GameObject> getObjectList() {
@@ -64,12 +138,8 @@ public class Handler {
         }
     }
 
-    public void setPlayerSpawn(int x, int y) {
-        nextPSLX = x;
-        nextPSLY = y;
-    }
-    public int getPlayerSpawnX() { return nextPSLX; }
-    public int getPlayerSpawnY() { return nextPSLY; }
+   // public int getPlayerSpawnX() { return world.getCurrentLevel().getPlayerSpawnX(); }
+   // public int getPlayerSpawnY() { return retu; }
 
     public int getEnemySpeed() {
         return enemySpeed;
@@ -78,4 +148,8 @@ public class Handler {
         return enemyDamage;
     }
     public int getEnemyFireRate() { return enemyFireRate; }
+
+    public void addProjectile(BaseProjectile bp) {
+        projectiles.add(bp);
+    }
 }

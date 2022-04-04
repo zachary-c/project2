@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.Align;
 
 import java.util.Random;
 
-public class Enemy extends Moving{
+public class Enemy extends Solid {
 
     // nate's department
     String[] walkAnimations = {"pendalton_front", "pendalton_right", "pendalton_left", "pendalton_back"};
@@ -39,7 +39,7 @@ public class Enemy extends Moving{
 
         // Sound Initialization
         discountCat = Gdx.audio.newSound(Gdx.files.internal("./audio/penta_noise.mp3"));
-        soundTimer = 10f;
+        soundTimer = 5f;
     }
 
     public void render(SpriteBatch batch) {

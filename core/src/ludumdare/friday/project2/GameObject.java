@@ -51,4 +51,8 @@ public abstract class GameObject {
     }
 
     public void dispose() { }
+
+    public String toString() {
+        return this.getClass().getName();
+    }
 }
